@@ -11,3 +11,6 @@ __pycache__
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Database
+bmo_data.db
