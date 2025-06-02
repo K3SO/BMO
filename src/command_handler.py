@@ -2,7 +2,7 @@ import discord
 import leveling
 
 # Determina la respuesta que tiene que dar
-async def get_response(message: discord.Message, user_message: str, bot) -> str:
+async def get_response(message: discord.Message, user_message: str, bot, guild_id) -> str:
     user_message = user_message[1:]
     lowered_message: str = user_message.lower()
 

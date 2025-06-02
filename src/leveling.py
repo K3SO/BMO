@@ -1,15 +1,13 @@
 import discord
 import sqlite3
 
-
 def lvl_function(user_lvl) -> int:
     lvl_base = 100
     # fórmula 1: lineal
     xp = lvl_base * (user_lvl + 1)
     return xp
 
-
-async def xp(message, bot):
+async def xp(message, bot, guild_id):
     connection = sqlite3.connect('bmo_data.db')
     cursor = connection.cursor()
 
@@ -33,10 +31,11 @@ async def xp(message, bot):
     # Determinar si el usuario tiene la experiencia suficente para subir de nivel
     xp_goal = lvl_function(user_lvl)
     if user_xp >= xp_goal:
-        user_lvl += 1
-        get_role(user_lvl, bot)
-        user_xp -= xp_goal
-        xp_goal = lvl_function(user_lvl)
+        while user_xp >= xp_goal:
+            user_lvl += 1
+            user_xp -= xp_goal
+            xp_goal = lvl_function(user_lvl)
+            await get_role(user_lvl, message, bot, guild_id)
         await message.channel.send(f'{message.author.mention}, has subido al nivel {user_lvl}!') # Cambiar mensaje?
 
     # Actualizar los datos en la base de datos
@@ -83,6 +82,5 @@ async def get_xp(message, bot):
     connection.commit()
     connection.close()
 
-async def get_role(lvl, bot):
-    # Aqui se asignarán los roles que se consiguen con el nivel
-    print('[DEBUG] Se ha llamado a get_roles')
+async def get_role(lvl, message, bot, guild_id):
+    guild = bot.get_guild(guild_id)

@@ -12,7 +12,8 @@ import message_handler
 load_dotenv()
 TOKEN: Final[str] = os.getenv('DISCORD_TOKEN')
 PREFIX: Final[str] = os.getenv('PREFIX')
-GUILD_ID = discord.Object(id=os.getenv('DEV_GUILD'))
+GUILD = discord.Object(id=os.getenv('DEV_GUILD'))
+GUILD_ID: Final[int] = os.getenv('DEV_GUILD')
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -42,8 +43,8 @@ async def on_message(message: discord.Message):
         return
     # print(f'{message.author} ha mandado "{message.content}"')
     if message.content[0] == PREFIX:
-        await command_handler.get_response(message, message.content, bot)
+        await command_handler.get_response(message, message.content, bot, GUILD_ID)
     else:
-        await message_handler.send(message, bot)
+        await message_handler.send(message, bot, GUILD_ID)
 
 bot.run(token=TOKEN)
