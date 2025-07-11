@@ -13,6 +13,7 @@ async def get_response(message: discord.Message, user_message: str, bot, guild_i
 
     # Comandos
     elif lowered_message in ['xp']:
+        print(f'[DEBUG] Se ha usado el comando "{lowered_message}"')
         await leveling.get_xp(message, bot)
 
     # Envia un mensaje avisando que el comando no existe
