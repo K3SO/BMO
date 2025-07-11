@@ -2,10 +2,8 @@ import discord
 import sqlite3
 
 def lvl_function(user_lvl) -> int:
-    lvl_base = 10
-    # Fórmula
-    xp = lvl_base * (user_lvl + 1)
-    return xp
+    lvl_base = 100
+    return lvl_base * (user_lvl + 1)
 
 async def xp(message, bot, guild_id):
     connection = sqlite3.connect('bmo_data.db')
@@ -26,6 +24,7 @@ async def xp(message, bot, guild_id):
 
     # Sumar la experiencia obtenida con el mensaje
     message_xp = len(message.content)
+    message_xp = round(5 + message_xp ** 0.9)
     user_xp += message_xp
 
     # Determinar si el usuario tiene la experiencia suficente para subir de nivel
