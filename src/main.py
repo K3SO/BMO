@@ -6,6 +6,7 @@ import sqlite3
 
 import command_handler
 import message_handler
+from leveling import recover_roles
 
 # Declara las variables de .env
 load_dotenv()
@@ -15,6 +16,7 @@ GUILD_ID = int(os.getenv('DEV_GUILD'))
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 # Crear/conectar la base de datos
@@ -24,6 +26,7 @@ cursor = connection.cursor()
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY,
+    user_name STRING,
     user_xp INTEGER DEFAULT 0,
     user_lvl INTEGER DEFAULT 0
 )
@@ -34,6 +37,11 @@ connection.close()
 @bot.event
 async def on_ready():
     print(f'Bot conectado como {bot.user}!\nPrefijo establecido como: "{PREFIX}"')
+
+@bot.event
+async def on_member_join(member):
+    await recover_roles(member, bot, GUILD_ID)
+    print(f'[DEBUG] {member.name} se ha unido al servidor')
 
 @bot.event
 async def on_message(message: discord.Message):
