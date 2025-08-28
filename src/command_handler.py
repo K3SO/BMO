@@ -1,6 +1,5 @@
 import discord
 import leveling
-import moderation
 
 def command_log(command):
     print(f'[DEBUG] Se ha usado el comando "{command}"')
@@ -20,11 +19,6 @@ async def get_response(message: discord.Message, user_message: str, bot, guild_i
     elif command in ('xp'):
         command_log(command)
         await leveling.get_xp(message, bot)
-
-    ## Moderación
-    elif command[:5] in ('warn '):
-        command_log(command)
-        await moderation.warn(message, command, bot, guild_id)
 
     # Envia un mensaje avisando que el comando no existe
     else:

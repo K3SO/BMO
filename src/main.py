@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY,
     user_xp INTEGER DEFAULT 0,
     user_lvl INTEGER DEFAULT 0,
-    warns INTEGER DEFAULT 0
 )
 ''')
 connection.commit()
