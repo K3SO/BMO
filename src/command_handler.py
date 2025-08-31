@@ -5,9 +5,9 @@ def command_log(command):
     print(f'[DEBUG] Se ha usado el comando "{command}"')
 
 # Determina la respuesta que tiene que dar
-async def get_response(message: discord.Message, user_message: str, bot, guild_id) -> str:
+async def get_response(message, user_message, bot):
     user_message = user_message[1:]
-    command: str = user_message.lower()
+    command = user_message.lower()
 
     # Envía una lista con los comandos disponibles
     if command in ('help', 'h', 'ayuda'):
@@ -18,7 +18,7 @@ async def get_response(message: discord.Message, user_message: str, bot, guild_i
     ## Xp
     elif command in ('xp'):
         command_log(command)
-        await leveling.get_xp(message, bot)
+        await leveling.get_xp(message.author, message.channel)
 
     # Envia un mensaje avisando que el comando no existe
     else:

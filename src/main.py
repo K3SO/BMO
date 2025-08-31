@@ -2,11 +2,10 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-import sqlite3
 
 import command_handler
-import message_handler
-from leveling import recover_roles
+import utility
+from leveling import recover_roles, xp
 
 # Declara las variables de .env
 load_dotenv()
@@ -19,11 +18,7 @@ intents.message_content = True
 intents.members = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
-# Crear/conectar la base de datos
-connection = sqlite3.connect('bmo_data.db')
-cursor = connection.cursor()
-# Crear la tabla de los usuarios
-cursor.execute('''
+utility.db_execute('''
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY,
     user_name STRING,
@@ -31,8 +26,6 @@ CREATE TABLE IF NOT EXISTS users (
     user_lvl INTEGER DEFAULT 0
 )
 ''')
-connection.commit()
-connection.close()
 
 @bot.event
 async def on_ready():
@@ -40,17 +33,22 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    await recover_roles(member, bot, GUILD_ID)
+    guild = bot.get_guild(GUILD_ID)
+    await recover_roles(member, guild)
     print(f'[DEBUG] {member.name} se ha unido al servidor')
 
 @bot.event
 async def on_message(message: discord.Message):
+    guild = bot.get_guild(GUILD_ID)
     if not message.content or message.author.bot:
         return
-    # print(f'{message.author} ha mandado "{message.content}"')
+    
+    # Acceso a los comandos
     if message.content[0] == PREFIX:
-        await command_handler.get_response(message, message.content, bot, GUILD_ID)
+        await command_handler.get_response(message, message.content, bot)
+
+    # Xp
     else:
-        await message_handler.send(message, bot, GUILD_ID)
+        await xp(message, message.author, guild)
 
 bot.run(token=TOKEN)
