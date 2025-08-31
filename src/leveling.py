@@ -29,7 +29,7 @@ def lvl_function(user_lvl) -> int:
 
 async def xp(message, user, guild):
     utility.ensure_user_exists(user.id, str(user))
-    user_data = utility.db_execute('SELECT user_xp, user_lvl FROM users WHERE user_id = ?', (user.id,), fetchone=True)
+    user_data = utility.db_execute('SELECT xp, lvl FROM users WHERE id = ?', (user.id,), fetchone=True)
     user_xp = user_data[0]
     user_lvl = user_data[1]
 
@@ -49,14 +49,14 @@ async def xp(message, user, guild):
             get_role_calls.append(user_lvl)
         await message.channel.send(f'{message.author.mention}, has subido al nivel {user_lvl}!') # Cambiar mensaje?
     
-    utility.db_execute('UPDATE users SET user_xp = ?, user_lvl = ? WHERE user_id = ?', (user_xp, user_lvl, user.id))
+    utility.db_execute('UPDATE users SET xp = ?, lvl = ? WHERE id = ?', (user_xp, user_lvl, user.id))
 
     for call in get_role_calls:
         await get_role(call, user, guild)
 
 async def get_xp(user, channel):
     utility.ensure_user_exists(user.id, str(user))
-    user_data = utility.db_execute('SELECT user_xp, user_lvl FROM users WHERE user_id = ?', (user.id,), fetchone=True)
+    user_data = utility.db_execute('SELECT xp, lvl FROM users WHERE id = ?', (user.id,), fetchone=True)
     user_xp = user_data[0]
     user_lvl = user_data[1]
 
@@ -92,7 +92,7 @@ async def get_role(lvl, user, guild):
 
 async def recover_roles(user, guild):
     utility.ensure_user_exists(user.id, str(user))
-    user_data = utility.db_execute('SELECT user_lvl FROM users WHERE user_id = ?', (user.id,), fetchone=True)
+    user_data = utility.db_execute('SELECT lvl FROM users WHERE id = ?', (user.id,), fetchone=True)
     user_lvl = user_data[0]
     get_role_calls = []
     for n in range(user_lvl + 1):

@@ -10,8 +10,8 @@ def db_execute(query: str, params: tuple = (), fetchone=False, fetchall=False):
             return cursor.fetchall()
         conn.commit()
 
-def ensure_user_exists(user_id, user_name: str):
+def ensure_user_exists(id, name: str):
     db_execute(
-        'INSERT OR IGNORE INTO users (user_id, user_name) VALUES (?, ?)',
-        (user_id, user_name)
+        'INSERT OR IGNORE INTO users (id, name) VALUES (?, ?)',
+        (id, name)
     )

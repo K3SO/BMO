@@ -20,10 +20,10 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 utility.db_execute('''
 CREATE TABLE IF NOT EXISTS users (
-    user_id INTEGER PRIMARY KEY,
-    user_name STRING,
-    user_xp INTEGER DEFAULT 0,
-    user_lvl INTEGER DEFAULT 0
+    id INTEGER PRIMARY KEY,
+    name TEXT,   
+    xp INTEGER DEFAULT 0,
+    lvl INTEGER DEFAULT 0
 )
 ''')
 
