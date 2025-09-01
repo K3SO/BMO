@@ -1,4 +1,3 @@
-import discord
 import leveling
 
 def command_log(command):
@@ -19,7 +18,17 @@ async def get_response(message, user_message, bot):
     ## Xp
     elif command_parts[0] in ('xp'):
         command_log(command)
-        await leveling.get_xp(message.author, message.channel)
+        if len(command_parts) >= 2:
+            part = command_parts[1]
+            if part[:2] == '<@' and part[-1:] == '>':
+                user = await bot.fetch_user(part[2:-1])
+            else:
+                await message.channel.send('Haz el favor de poner un usuario válido')
+                return
+        else:
+            user = message.author
+        
+        await leveling.get_xp(user, message.channel)
 
     # Envia un mensaje avisando que el comando no existe
     else:
